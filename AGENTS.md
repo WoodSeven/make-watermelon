@@ -46,3 +46,9 @@
 - 使用中文提交说明，描述修改内容，并在提交正文中记录验证结果；未执行的检查说明原因，不能写成已通过。仅修改文档时检查内容和 `git diff --check` 即可。
 - 完成后报告 commit ID、提交说明和验证结果。没有实际改动时无需创建空提交；提交失败时保留改动并说明原因。
 - 默认保存到本地 Git；用户明确要求上传时再执行 `git push`。
+
+## Subagent 分工
+
+- 页面布局、配色、文字层次、操作提示排版和手机适配任务，委派给项目级 `frontend_layout` Subagent，其定义在 `.codex/agents/frontend_layout.toml`。主 Agent 说明任务目标和文件分工后再委派，并在完成后检查结果。
+- `frontend_layout` 主要负责 `index.html`、`src/index.css`；涉及画布缩放时协调 `src/main.ts`，涉及画布外观时协调 `src/app.ts`。物理引擎与玩法逻辑继续按上面的修改边界处理。
+- Subagent 返回修改内容和实际验证结果；主 Agent 统一按 Git 版本记录规则创建本地 commit。需要 Subagent 自行提交时，主 Agent 必须明确分配提交任务并避免并发操作 Git。
