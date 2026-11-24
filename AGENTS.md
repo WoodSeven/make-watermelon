@@ -1,6 +1,6 @@
 # make-watermelon 项目指南
 
-这是浏览器里的合成大西瓜，使用 TypeScript、Vite、Pixi.js 和 Box2D；没有后端。
+当前实现是浏览器里的合成大西瓜，使用 TypeScript、Vite、Pixi.js 和 Box2D；没有后端。后续目标是在同一网站持续加入独立小游戏；下面的入口描述对应当前单游戏结构，实际迁移后同步更新。
 
 ## 入口和结构
 
@@ -49,6 +49,8 @@
 
 ## Subagent 分工
 
-- 页面布局、配色、文字层次、操作提示排版和手机适配任务，委派给项目级 `frontend_layout` Subagent，其定义在 `.codex/agents/frontend_layout.toml`。主 Agent 说明任务目标和文件分工后再委派，并在完成后检查结果。
-- `frontend_layout` 主要负责 `index.html`、`src/index.css`；涉及画布缩放时协调 `src/main.ts`，涉及画布外观时协调 `src/app.ts`。物理引擎与玩法逻辑继续按上面的修改边界处理。
-- Subagent 返回修改内容和实际验证结果；主 Agent 统一按 Git 版本记录规则创建本地 commit。需要 Subagent 自行提交时，主 Agent 必须明确分配提交任务并避免并发操作 Git。
+- 主 Agent 负责需求、接入方案、接口与文件分工、集成和 Git 提交。新增小游戏时先使用 `.agents/skills/add-mini-game/SKILL.md`，再分派实现与验证任务。
+- `frontend_layout`（`.codex/agents/frontend_layout.toml`）负责网站入口、导航、游戏界面布局与样式、手机适配；当前主要文件是 `index.html`、`src/index.css`，画布缩放和外观需协调 `src/main.ts`、`src/app.ts`。存在 `docs/UI_STYLE.md` 时先遵循其中的界面规范。
+- `gameplay`（`.codex/agents/gameplay.toml`）负责各小游戏的规则、状态、输入及按需的计分、结束、重开和退出清理；当前合成大西瓜逻辑在 `src/core/index.ts`、`src/config/index.ts`，新游戏按主 Agent 确定的隔离方式接入。
+- `qa`（`.codex/agents/qa.toml`）负责依据验收标准检查新功能和已有游戏回归，报告实际命令、浏览器结果、问题及未验证项；默认不修改业务代码。
+- 主 Agent 先约定游戏入口与生命周期、UI 事件/状态接口，并明确每个文件的修改责任人；共享入口或同一文件需要串行修改。Subagent 返回修改内容和验证结果，主 Agent 统一按 Git 规则保存版本，避免并发提交。
