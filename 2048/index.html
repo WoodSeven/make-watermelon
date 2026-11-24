@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/src/index.css" />
+    <link rel="stylesheet" href="/src/grid2048/game.css" />
+    <title>2048 · 方格工坊</title>
+  </head>
+  <body class="grid2048-page">
+    <header class="grid2048-header">
+      <nav class="grid2048-nav" aria-label="游戏导航">
+        <a class="back-link" href="../"><span aria-hidden="true">←</span> 游戏列表</a>
+      </nav>
+    </header>
+    <main class="grid2048-layout" aria-labelledby="grid2048-title">
+      <section class="grid2048-panel" aria-label="规则与操作">
+        <h1 id="grid2048-title">2048 <span>方格工坊</span></h1>
+        <p id="grid2048-rules">用方向键或点击箭头移动 5 × 5 棋盘上的方块。相同数字相撞时合并，每次有效移动后出现一个新方块。目标是合成 2048。</p>
+        <dl class="grid2048-score-card">
+          <dt>当前分数</dt>
+          <dd><output id="grid2048-score">0</output></dd>
+        </dl>
+        <div class="grid2048-controls">
+          <div class="grid2048-directions" role="group" aria-label="移动方块">
+            <button type="button" data-direction="up" aria-label="上移">↑</button>
+            <button type="button" data-direction="left" aria-label="左移">←</button>
+            <button type="button" data-direction="down" aria-label="下移">↓</button>
+            <button type="button" data-direction="right" aria-label="右移">→</button>
+          </div>
+          <div class="grid2048-actions">
+            <button type="button" id="grid2048-undo" disabled aria-describedby="grid2048-undo-hint">撤销一步</button>
+            <button type="button" id="grid2048-restart">重新开始</button>
+          </div>
+        </div>
+        <p class="grid2048-undo-hint" id="grid2048-undo-hint">每局可撤销一次。</p>
+      </section>
+      <section class="grid2048-play" aria-label="游戏区域">
+        <div class="grid2048-board" id="grid2048-board" role="group" tabindex="0" aria-label="数字棋盘" aria-describedby="grid2048-rules"></div>
+        <p class="grid2048-status" id="grid2048-status" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+    <script type="module" src="/src/grid2048/main.ts"></script>
+  </body>
+</html>

@@ -11,6 +11,7 @@
 - `src/config/index.ts` 定义画布尺寸、物理参数和按等级排列的 `Fruits`；图片在 `public/fruits/`。
 - `src/pixi.ts`、`src/box2d.ts` 给 `window.PIXI`、`window.b2` 提供类型；`src/b2/` 是随仓库保存的第三方 Box2D 源码。
 - `watermelon-orchard/index.html` 是合成大西瓜 · 果园版的独立入口，玩法和游戏页专用样式在 `src/orchard/`。页面先加载 Box2D，再运行 `src/orchard/main.ts`，用 Canvas 2D 绘制游戏。
+- `2048/index.html` 是 2048 · 方格工坊的独立入口，数字合并规则、界面交互和专用样式在 `src/grid2048/`。游戏使用 TypeScript 和 HTML 棋盘。
 - 各页面共用 `src/index.css`，并在 `vite.config.ts` 登记为独立构建入口。没有 React 组件，也没有服务器端入口。
 
 ## 命令

@@ -6,7 +6,7 @@ export default defineConfig({
   build: {
     cssTarget: 'chrome61',
     rollupOptions: {
-      input: ['index.html', 'dxg/index.html', 'watermelon-orchard/index.html'],
+      input: ['index.html', 'dxg/index.html', 'watermelon-orchard/index.html', '2048/index.html'],
     },
   },
 });

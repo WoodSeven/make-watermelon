@@ -1,5 +1,11 @@
 const games = [
   {
+    name: '2048 · 方格工坊',
+    sortKey: '2048 fang ge gong fang',
+    href: './2048/',
+    icon: '/grid2048/card.png',
+  },
+  {
     name: '合成大西瓜',
     sortKey: 'he cheng da xi gua',
     href: './dxg/',
