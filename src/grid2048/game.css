@@ -171,6 +171,7 @@
 }
 
 .grid2048-board {
+  position: relative;
   display: grid;
   grid-template: repeat(5, minmax(0, 1fr)) / repeat(5, minmax(0, 1fr));
   gap: clamp(0.375rem, 1vw, 0.65rem);
@@ -219,6 +220,51 @@
 .grid2048-tile[data-value="512"] { background: #66527f; }
 .grid2048-tile[data-value="1024"] { background: #343e75; }
 .grid2048-tile[data-value="2048"] { color: #334028; background: #f4d473; }
+
+.grid2048-tile.grid2048-tile--vacated {
+  color: transparent;
+  background: #35594d;
+}
+
+.grid2048-tile--flight {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  animation: grid2048-slide 132ms cubic-bezier(0.2, 0.65, 0.25, 1) both;
+}
+
+.grid2048-tile--merged {
+  position: relative;
+  z-index: 1;
+  animation: grid2048-merge 116ms ease-out;
+}
+
+.grid2048-tile--spawned {
+  animation: grid2048-spawn 112ms ease-out 12ms both;
+}
+
+@keyframes grid2048-slide {
+  from { transform: translate(0, 0); }
+  to { transform: translate(var(--grid2048-dx), var(--grid2048-dy)); }
+}
+
+@keyframes grid2048-merge {
+  0%, 100% { transform: scale(1); }
+  45% { transform: scale(1.1); }
+}
+
+@keyframes grid2048-spawn {
+  from { opacity: 0; transform: scale(0.78); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grid2048-tile--flight,
+  .grid2048-tile--merged,
+  .grid2048-tile--spawned {
+    animation: none;
+  }
+}
 
 .grid2048-status {
   min-height: 1.75rem;

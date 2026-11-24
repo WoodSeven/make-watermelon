@@ -13,6 +13,18 @@ export interface GameState extends Position {
   readonly undoAvailable: boolean;
 }
 
+interface TileMovement {
+  readonly from: number;
+  readonly to: number;
+}
+
+export interface MovePlan {
+  readonly game: GameState;
+  readonly movements: readonly TileMovement[];
+  readonly mergedAt: readonly number[];
+  readonly spawnedAt: number | null;
+}
+
 const cellIndex = (direction: Direction, line: number, offset: number): number => {
   switch (direction) {
     case 'left':
@@ -28,30 +40,45 @@ const cellIndex = (direction: Direction, line: number, offset: number): number =
   }
 };
 
-export const slideTiles = (tiles: readonly number[], direction: Direction) => {
+const traceSlide = (tiles: readonly number[], direction: Direction) => {
   const moved = Array<number>(BOARD_SIZE ** 2).fill(0);
+  const movements: TileMovement[] = [];
+  const mergedAt: number[] = [];
   let addedScore = 0;
 
   for (let line = 0; line < BOARD_SIZE; line++) {
     const positions = Array.from({ length: BOARD_SIZE }, (_, offset) => cellIndex(direction, line, offset));
-    const values = positions.map((index) => tiles[index]).filter((tile) => tile !== 0);
+    const filled = positions.filter((index) => tiles[index] !== 0);
     let destination = 0;
 
-    for (let offset = 0; offset < values.length; offset++) {
-      const value = values[offset];
-      if (value === values[offset + 1]) {
-        moved[positions[destination]] = value * 2;
+    for (let offset = 0; offset < filled.length; offset++) {
+      const from = filled[offset];
+      const to = positions[destination];
+      const value = tiles[from];
+      const neighbor = filled[offset + 1];
+      movements.push({ from, to });
+      if (value === tiles[neighbor]) {
+        movements.push({ from: neighbor, to });
+        mergedAt.push(to);
+        moved[to] = value * 2;
         addedScore += value * 2;
         offset++;
       } else {
-        moved[positions[destination]] = value;
+        moved[to] = value;
       }
       destination++;
     }
   }
 
   const changed = moved.some((tile, index) => tile !== tiles[index]);
-  return { tiles: changed ? moved : tiles, addedScore };
+  return {
+    tiles: changed ? moved : tiles, addedScore, movements, mergedAt,
+  };
+};
+
+export const slideTiles = (tiles: readonly number[], direction: Direction) => {
+  const { tiles: moved, addedScore } = traceSlide(tiles, direction);
+  return { tiles: moved, addedScore };
 };
 
 const addTile = (tiles: readonly number[], random: () => number) => {
@@ -59,33 +86,43 @@ const addTile = (tiles: readonly number[], random: () => number) => {
   tiles.forEach((tile, index) => {
     if (tile === 0) empty.push(index);
   });
-  if (empty.length === 0) return tiles;
+  if (empty.length === 0) return { tiles, spawnedAt: null };
 
   const updated = [...tiles];
   const index = empty[Math.floor(random() * empty.length)];
   updated[index] = random() < 0.9 ? 2 : 4;
-  return updated;
+  return { tiles: updated, spawnedAt: index };
 };
 
 export const createGame = (random = Math.random): GameState => {
   const empty = Array<number>(BOARD_SIZE ** 2).fill(0);
-  const tiles = addTile(addTile(empty, random), random);
+  const { tiles } = addTile(addTile(empty, random).tiles, random);
   return {
     tiles, score: 0, previous: null, undoAvailable: true,
   };
 };
 
-export const playMove = (game: GameState, direction: Direction, random = Math.random): GameState => {
-  const moved = slideTiles(game.tiles, direction);
-  if (moved.tiles === game.tiles) return game;
+export const planMove = (game: GameState, direction: Direction, random = Math.random): MovePlan | null => {
+  const moved = traceSlide(game.tiles, direction);
+  if (moved.tiles === game.tiles) return null;
 
+  const { tiles, spawnedAt } = addTile(moved.tiles, random);
   return {
-    tiles: addTile(moved.tiles, random),
-    score: game.score + moved.addedScore,
-    previous: game.undoAvailable ? { tiles: game.tiles, score: game.score } : null,
-    undoAvailable: game.undoAvailable,
+    game: {
+      tiles,
+      score: game.score + moved.addedScore,
+      previous: game.undoAvailable ? { tiles: game.tiles, score: game.score } : null,
+      undoAvailable: game.undoAvailable,
+    },
+    movements: moved.movements,
+    mergedAt: moved.mergedAt,
+    spawnedAt,
   };
 };
+
+export const playMove = (game: GameState, direction: Direction, random = Math.random): GameState => (
+  planMove(game, direction, random)?.game ?? game
+);
 
 export const undoMove = (game: GameState): GameState => {
   if (!game.undoAvailable || !game.previous) return game;
