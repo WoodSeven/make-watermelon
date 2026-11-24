@@ -1,21 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>合成大西瓜</title>
-    <script src="/box2d.min.js"></script>
-    <script src="/pixi-6.4.2.min.js"></script>
+    <link rel="stylesheet" href="/src/index.css" />
+    <title>小游戏</title>
   </head>
-  <body>
-    <div id="root"></div>
-    <a href="https://game.hullqin.cn/">
-      游戏列表
-    </a>
-    <footer>
-      <div>欢迎关注公众号「线下聚会游戏」</div>
-      <div>Author: Hull Qin</div>
-    </footer><script type="module" src="/src/main.ts"></script>
+  <body class="catalog-page">
+    <header class="catalog-header">
+      <h1>小游戏</h1>
+    </header>
+    <main id="catalog" class="catalog" aria-label="游戏列表"></main>
+    <footer class="site-footer">
+      <span>微信公众号「线下聚会游戏」</span>
+      <a href="https://game.hullqin.cn/">Hull Qin</a>
+    </footer>
+    <template id="game-card">
+      <li>
+        <a class="game-card">
+          <span class="game-card-icon"></span>
+          <span class="game-card-name"></span>
+        </a>
+      </li>
+    </template>
+    <script type="module" src="/src/catalog.ts"></script>
   </body>
 </html>

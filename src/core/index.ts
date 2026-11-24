@@ -62,7 +62,11 @@ const currentNextFruit = {
   next: 0,
 };
 let currentFruitSprite: SpriteType;
-let nextFruitSprite: SpriteType;
+const nextFruitImage = new Image(24, 24);
+nextFruitImage.alt = '';
+const showNextFruit = (type: number) => {
+  nextFruitImage.src = Fruits[type].name;
+};
 const setCurrentNextFruit = () => {
   let currentFruit = 0;
   let nextFruit = 0;
@@ -83,9 +87,7 @@ const setCurrentNextFruit = () => {
     },
     set(value) {
       nextFruit = value;
-      const fruit = Fruits[value];
-      nextFruitSprite.texture = Loader.shared.resources[fruit.name].texture!;
-      nextFruitSprite.scale.set(fruit.radius / fruit.imgRadius);
+      showNextFruit(value);
     },
   });
 };
@@ -156,7 +158,6 @@ const loop = () => {
   requestAnimationFrame(loop);
 };
 
-const rootElement = document.getElementById('root')!;
 let lastClickTime = 0;
 const tooFrequent = () => {
   const now = new Date().getTime();
@@ -166,45 +167,41 @@ const tooFrequent = () => {
 };
 
 export const init = () => {
-  const canvas = document.getElementsByTagName('canvas')[0];
+  const canvas = app.view;
+  const gameX = (clientX: number) => {
+    const { left, width } = canvas.getBoundingClientRect();
+    return (clientX - left) * Width / width;
+  };
   canvas.addEventListener('touchmove', (event) => {
     const { changedTouches } = event;
     if (changedTouches.length !== 1) return;
-    const left = parseFloat(getComputedStyle(rootElement).marginLeft);
     const { clientX } = changedTouches[0];
-    // @ts-ignore
-    const newX = (clientX - left) / parseFloat(rootElement.childNodes[0].style.transform.slice(6));
-    currentFruitSprite.x = newX;
+    currentFruitSprite.x = gameX(clientX);
   });
   canvas.addEventListener('touchend', (event) => {
     if (tooFrequent()) return;
     const { changedTouches } = event;
     if (changedTouches.length !== 1) return;
-    const left = parseFloat(getComputedStyle(rootElement).marginLeft);
     const { clientX } = changedTouches[0];
-    // @ts-ignore
-    const newX = (clientX - left) / parseFloat(rootElement.childNodes[0].style.transform.slice(6));
     currentFruitSprite.x = Width / 2;
-    // @ts-ignore
-    createFruit(currentNextFruit.current, newX);
+    createFruit(currentNextFruit.current, gameX(clientX));
   });
   canvas.addEventListener('mousemove', (event) => {
     if ('ontouchend' in window) return;
-    const { offsetX } = event;
-    currentFruitSprite.x = offsetX;
+    currentFruitSprite.x = gameX(event.clientX);
   });
   canvas.addEventListener('click', (event) => {
     if ('ontouchend' in window) return;
     if (tooFrequent()) return;
-    const { offsetX } = event;
-    currentFruitSprite.x = offsetX;
-    createFruit(currentNextFruit.current, offsetX);
+    const x = gameX(event.clientX);
+    currentFruitSprite.x = x;
+    createFruit(currentNextFruit.current, x);
   });
   createWall();
   currentFruitSprite = createSprite(currentNextFruit.current, Width / 2, fruitDefaultY * Ratio);
-  nextFruitSprite = createSprite(currentNextFruit.next, Width / 2, 0);
   app.stage.addChild(currentFruitSprite);
-  app.stage.addChild(nextFruitSprite);
+  showNextFruit(currentNextFruit.next);
+  document.getElementById('next-fruit')!.append(nextFruitImage);
 
   b2.ContactListener.prototype.PreSolve = (contact) => {
     const a = contact.GetFixtureA().GetBody().GetUserData();

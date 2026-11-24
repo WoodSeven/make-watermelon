@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/index.css" />
+    <title>合成大西瓜 · 小游戏</title>
+    <script src="/box2d.min.js"></script>
+    <script src="/pixi-6.4.2.min.js"></script>
+  </head>
+  <body class="game-page">
+    <header class="game-header">
+      <a class="back-link" href="../"><span aria-hidden="true">←</span> 游戏列表</a>
+      <h1>合成大西瓜</h1>
+      <div id="next-fruit" class="next-fruit"><span>下一个</span></div>
+    </header>
+    <main class="game-area" aria-label="游戏区">
+      <div id="root" class="game-board"></div>
+    </main>
+    <footer class="site-footer">
+      <span>微信公众号「线下聚会游戏」</span>
+      <a href="https://game.hullqin.cn/">Hull Qin</a>
+    </footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

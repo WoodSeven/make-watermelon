@@ -2,7 +2,6 @@ import pixi from './pixi';
 import { Fruits, Height, Width } from './config';
 import app from './app';
 import { init } from './core';
-import './index.css';
 
 const { Loader } = pixi;
 const images = Fruits.map((i) => i.name);
@@ -11,22 +10,10 @@ const canvas = app.view;
 root.appendChild(canvas);
 Loader.shared.add(images).load(init);
 
-const resetSize = () => {
-  const { innerWidth, innerHeight } = window;
-  document.body.style.height = `${innerHeight}px`;
-  if (innerWidth / innerHeight > Width / Height) {
-    root.style.height = `${innerHeight}px`;
-    root.style.width = `${innerHeight / Height * Width}px`;
-    canvas.style.transform = `scale(${innerHeight / Height})`;
-  } else {
-    root.style.width = `${innerWidth}px`;
-    root.style.height = `${innerWidth / Width * Height}px`;
-    canvas.style.transform = `scale(${innerWidth / Width})`;
-  }
-};
-
-canvas.style.width = `${Width}px`;
-canvas.style.height = `${Height}px`;
-resetSize();
-
-window.onresize = resetSize;
+const resizeObserver = new ResizeObserver(([entry]) => {
+  const { width, height } = entry.contentRect;
+  const scale = Math.min(width / Width, height / Height);
+  canvas.style.width = `${Width * scale}px`;
+  canvas.style.height = `${Height * scale}px`;
+});
+resizeObserver.observe(root.parentElement!);
