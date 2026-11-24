@@ -5,6 +5,12 @@ const games = [
     href: './dxg/',
     icon: '/fruits/fruit_11.png',
   },
+  {
+    name: '合成大西瓜 · 果园版',
+    sortKey: 'he cheng da xi gua guo yuan ban',
+    href: './watermelon-orchard/',
+    icon: '/orchard/card.png',
+  },
 ];
 
 const catalog = document.getElementById('catalog')!;

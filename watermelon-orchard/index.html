@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/src/index.css" />
+    <link rel="stylesheet" href="/src/orchard/orchard.css" />
+    <title>合成大西瓜 · 果园版</title>
+    <script src="/box2d.min.js"></script>
+  </head>
+  <body class="orchard-page">
+    <header class="orchard-header">
+      <nav class="orchard-nav" aria-label="游戏导航">
+        <a class="back-link" href="../"><span aria-hidden="true">←</span> 游戏列表</a>
+      </nav>
+    </header>
+    <main class="orchard-main">
+      <section class="orchard-info" aria-labelledby="orchard-title">
+        <h1 id="orchard-title">合成大西瓜 <span>果园版</span></h1>
+        <p id="orchard-rules">同类水果相撞合成，果堆过警戒线即结束。</p>
+        <dl class="orchard-stats">
+          <div>
+            <dt>分数</dt>
+            <dd><output id="orchard-score" aria-live="polite">0</output></dd>
+          </div>
+          <div>
+            <dt>下一颗</dt>
+            <dd><canvas id="orchard-next" width="40" height="40" role="img" aria-label="下一颗水果"></canvas></dd>
+          </div>
+        </dl>
+      </section>
+      <section class="orchard-playfield" aria-label="游戏区">
+        <div class="orchard-board-frame">
+          <canvas id="orchard-board" class="orchard-board" width="360" height="460" tabindex="0" aria-label="水果投放区" aria-describedby="orchard-controls orchard-rules"></canvas>
+          <div id="orchard-result" class="orchard-result" role="dialog" aria-labelledby="orchard-result-title" aria-describedby="orchard-result-text" hidden>
+            <div class="orchard-result-card">
+              <h2 id="orchard-result-title">游戏结束</h2>
+              <p id="orchard-result-text"></p>
+              <button id="orchard-play-again" class="orchard-button orchard-button-primary" type="button">再玩一次</button>
+            </div>
+          </div>
+        </div>
+        <div class="orchard-actions">
+          <p id="orchard-controls">点击或左右拖动后松开鼠标投放。<br />键盘 <kbd>←</kbd> <kbd>→</kbd> 移动，<kbd>空格</kbd> 或 <kbd>Enter</kbd> 投放。</p>
+          <button id="orchard-restart" class="orchard-button" type="button">重新开始</button>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="/src/orchard/main.ts"></script>
+  </body>
+</html>
