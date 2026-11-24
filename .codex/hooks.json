@@ -1,0 +1,66 @@
+{
+  "description": "小游戏项目的子agent生命周期日志、编辑后差异检查和结束前按需构建。",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node --input-type=module -e \"import {execFileSync} from 'node:child_process'; import {join} from 'node:path'; import {pathToFileURL} from 'node:url'; const root=execFileSync('git',['rev-parse','--show-toplevel'],{encoding:'utf8',windowsHide:true}).trim(); await (await import(pathToFileURL(join(root,'.codex','hooks','run.mjs')).href)).runCli();\"",
+            "statusMessage": "记录本次会话的源码基线",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node --input-type=module -e \"import {execFileSync} from 'node:child_process'; import {join} from 'node:path'; import {pathToFileURL} from 'node:url'; const root=execFileSync('git',['rev-parse','--show-toplevel'],{encoding:'utf8',windowsHide:true}).trim(); await (await import(pathToFileURL(join(root,'.codex','hooks','run.mjs')).href)).runCli();\"",
+            "statusMessage": "记录子agent启动",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node --input-type=module -e \"import {execFileSync} from 'node:child_process'; import {join} from 'node:path'; import {pathToFileURL} from 'node:url'; const root=execFileSync('git',['rev-parse','--show-toplevel'],{encoding:'utf8',windowsHide:true}).trim(); await (await import(pathToFileURL(join(root,'.codex','hooks','run.mjs')).href)).runCli();\"",
+            "statusMessage": "记录子agent结束",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "^(apply_patch|Edit|Write|Bash)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node --input-type=module -e \"import {execFileSync} from 'node:child_process'; import {join} from 'node:path'; import {pathToFileURL} from 'node:url'; const root=execFileSync('git',['rev-parse','--show-toplevel'],{encoding:'utf8',windowsHide:true}).trim(); await (await import(pathToFileURL(join(root,'.codex','hooks','run.mjs')).href)).runCli();\"",
+            "statusMessage": "检查本次文件差异",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node --input-type=module -e \"import {execFileSync} from 'node:child_process'; import {join} from 'node:path'; import {pathToFileURL} from 'node:url'; const root=execFileSync('git',['rev-parse','--show-toplevel'],{encoding:'utf8',windowsHide:true}).trim(); await (await import(pathToFileURL(join(root,'.codex','hooks','run.mjs')).href)).runCli();\"",
+            "statusMessage": "按源码变化检查构建",
+            "timeout": 180
+          }
+        ]
+      }
+    ]
+  }
+}
